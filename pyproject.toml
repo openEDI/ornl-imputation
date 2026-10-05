@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ornl-pow-imputation"
+version = "0.1.0"
+description = "Standalone LSTM imputation for point-on-wave voltage data"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "pandas",
+  "torch",
+  "scikit-learn",
+]
+
+[project.optional-dependencies]
+dev = [
+  "build",
+  "mypy",
+  "pytest",
+  "pytest-cov",
+  "ruff",
+]
+
+[project.scripts]
+ornl-pow-impute = "ornl_pow_imputation.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers"
+testpaths = ["tests"]
+markers = [
+  "slow: longer-running model training and integration checks",
+  "reference_quality: quality comparison against reference-data baselines",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+ignore = ["EXE002"]
+
+[tool.mypy]
+python_version = "3.10"
+packages = ["ornl_pow_imputation"]
+strict = true
+# The reference runtime uses older scientific packages without complete typing
+# metadata. Keep strict checking for this package while tolerating those imports.
+ignore_missing_imports = true
+disallow_any_generics = false
+disallow_untyped_calls = false
+warn_return_any = false
